@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: opentelemetry-swagger-serilog
+  labels:
+    app: opentelemetry-demo3
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: opentelemetry-demo3
+  template:
+    metadata:
+      labels:
+        app: opentelemetry-demo3
+    spec:
+      containers:
+      - name: opentelemetry-demo3
+        image: waqarafzal/sampleapp4:with_http_openetelemetry_and_serilog_newservice
+        ports:
+        - containerPort: 8080  # Assuming your app listens on port 8080
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: "Production"
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: "http://tempo:4318"
+        - name: OTEL_SERVICE_NAME
+          value: "OpenTelemetryDemo"
+        - name: OTEL_METRICS_EXPORTER
+          value: "prometheus"
+        - name: OTEL_TRACES_EXPORTER
+          value: "otlp"
+        - name: OTEL_RESOURCE_ATTRIBUTES
+          value: "service.name=OpenTelemetryDemo"
+        - name: OTEL_EXPORTER_PROMETHEUS_HOST
+          value: "0.0.0.0"
+        - name: OTEL_EXPORTER_PROMETHEUS_PORT
+          value: "9464"
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
+          requests:
+            cpu: "250m"
+            memory: "128Mi"
+        livenessProbe:
+          httpGet:
+            path: "/api/home"  # Ensure this path is valid in your app
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: "/api/home"  # Ensure this path is valid in your app
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+

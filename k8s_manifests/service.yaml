@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: opentelemetry-swagger-serilog
+  labels:
+    app: opentelemetry-demo3
+spec:
+  selector:
+    app: opentelemetry-demo3
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+    - name: metrics
+      port: 9464
+      targetPort: 9464
+  type: NodePort  # Ensure you really want this type
+

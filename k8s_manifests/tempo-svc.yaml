@@ -1,0 +1,7 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: tempo
+spec:
+  type: ExternalName
+  externalName: tempo.monitoring.svc.cluster.local

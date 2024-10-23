@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: opentelemetry-swagger-serilog
+  labels:
+    app: opentelemetry-demo3
+spec:
+  selector:
+    matchLabels:
+      app: opentelemetry-demo3
+  endpoints:
+    - port: "9464"  # Ensure this is a string
+      path: /metrics
+      interval: 30s
+
